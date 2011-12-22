@@ -1,1 +1,5 @@
 This is a small Python script that makes programatic edits to DominionStrategy.com.
+
+This might be useful as an example script for people who want to do some
+edits to their blog in Python, but can't find an sample code on the 
+net.

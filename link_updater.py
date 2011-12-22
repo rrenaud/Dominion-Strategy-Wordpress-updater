@@ -62,7 +62,8 @@ def main():
     # blog_id = ds_blog_info['blogid']
     blog_id = '17443029'
 
-    card_list = list(csv.reader(open('card_list.csv', 'r').readlines()))
+    card_list = list(csv.DictReader(open('card_list.csv', 'r').readlines()))
+
     # We need to figure out things like 'Village' is contained in 
     # 'Mining Village', and 'Market' is contained in 'Black Market', so we
     # don't do something stupid like make a link from the Market in 
@@ -70,10 +71,12 @@ def main():
     contained_lists = collections.defaultdict(list)
     cards = []
     pluralizer = {}
-    for s, p in card_list:
-        cards.append(s)
-        pluralizer[s] = p
-        for s2, p2 in card_list:
+    for row in card_list:
+        s = row['Singular']
+        cards.append(row['Singular'])
+        pluralizer[s] = row['Plural']
+        for row2 in card_list:
+            s2 = row2['Singular']
             if s != s2 and s in s2:
                 contained_lists[s].append(s2)
 
@@ -99,7 +102,8 @@ def main():
 
     card_posts = {}
     card_post_starts = ['Dominion:', 'Intrigue:', 'Seaside:', 'Alchemy:',
-                        'Prosperity:', 'Guest Article:']
+                        'Prosperity:', 'Guest Article:', 'Cornucopia:',
+                        'Hinterlands:']
 
     # Only make links to published posts
     for post in published_posts:
@@ -151,7 +155,7 @@ def main():
             print
 
         def IsoURLToCRUrl(match):
-            return 'councilroom.com/game?game_id=%s' % (match.group('fn'))
+            return 'councilroom.com/game?game_id=%s' % match.group('fn')
                 
         iso_link_matcher = re.compile(
             'dominion\.isotropic\.org\/gamelog\/[0-9]*\/[0-9]*\/(?P<fn>.*)')
